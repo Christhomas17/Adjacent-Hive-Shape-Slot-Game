@@ -43,8 +43,22 @@ adjs = {(0,0):[(1,0),(1,1),(0,1)],(0,1):[(0,0),(1,1),(1,2),(0,2)],(0,2):[(0,1),(
 (4,1):[(4,2),(3,2),(3,1),(4,0)],
 (4,2):[(3,3),(3,2),(4,1)]}
 
+def create_winds_dict():
+	
+	charizard = {symbol:{i:0 for i in range(20)} for symbol in range(10)}
+	charizard['coins'] = {i:0 for i in range(20)}
+	# print(charizard)
+	return(charizard)
 
+winsDict = create_winds_dict()
+# print(winsDict)
 
+# symbol = 1
+# count = 4
+# # print(x[1][4])
+# # print(x)
+# x[symbol][count] += 1
+# print(x)
 
 
 
@@ -64,28 +78,28 @@ def check_adjacent_spots(adjs,start,matched,checked,count,symbol,window):
 
 def check_window(window,adjs):
 	allMatched = []
+	winInWindow = False
 	for col in range(5):
 		for row in range(windowSize[col]):
-			# col = 0
-			# row = 0
+			
 			symbol = window[col][row]
 
 			#let's keep track of the spots where adjacent symbols are
 			spot = (col,row)
-			# print(symbol, 'sym')
+			
 			matched = [spot]
 			checked = [spot]
 			count = 1
-			# continu = True
+			
 			i = 0
 
 			if spot not in allMatched:
 				continu = True
 			while  continu:
 					spot = matched[i]
-					# print(spot, 'spot')
+					
 					continu,matched,checked = check_adjacent_spots(adjs,spot,matched,checked,count,symbol,window)
-					# print(matched, 'hi')
+					
 					i+=1
 
 					if i >(len(matched)-1):
@@ -94,29 +108,50 @@ def check_window(window,adjs):
 			symCount = len(matched)
 
 
-			global wins
+			# global wins
+			global winsDict
 
 			if symCount >=4:
+				return(None)
+                
+				winInWindow = True
 				# print('hi')
-				wins[symCount][symbol] += 1
+				# wins[symCount][symbol] += 1
+				# print(symbol,symCount)
+				winsDict[symbol][symCount] += 1
 
-			# global winsDict
-			# if symCount >= 4:
-			# 	try:
-			# 		winsDict[symbol][symCount] += 1
-			# 	except:
-			# 		winsDict[symbol][symCount] = 1
 			
-			# print(matched, 'matched', str(len(matched)) + 'count')
 			allMatched.extend(matched)
 
 
-		# print(window[col][row],spot)
+	#maybe nines are ok so I am going to not check for nines
+	if not winInWindow:
+		coins = 0
+		#let's check for a 9
+		for col in range(5):
+			for row in range(windowSize[col]):			
+				if window[col][row] == 6:
+					coins+=1
+	# if not winInWindow:
+	# 	coins = 0
+	# 	#let's check for a 9
+	# 	for col in range(5):
+	# 		for row in range(windowSize[col]):
+	# 			if window[col][row] == 9:
+	# 				return(None)
+	# 			else:
+	# 				if window[col][row] == 6:
+	# 					coins+=1
+	#If we're here, then there have been no wins in the entire window or nines
+		winsDict['coins'][coins] += 1
+
+
+		
 
 
 
 
-wins = pd.DataFrame(np.zeros(shape = (12,20)))
+# wins = pd.DataFrame(np.zeros(shape = (12,20)))
 
 def play():
 	count = 1
@@ -125,14 +160,16 @@ def play():
 	for stop in product(np.arange(0,40,1),repeat = 5):
 
 		if count %1000000 == 0:
-			print(count, wins)
+			print(count)
+		# if count == 10003:
+		# 	return(winsDict)
 
 		window = get_window(reel1,stop,windowSize,reel1Lengths)
 		check_window(window,adjs)
 		count += 1
-	print(wins,stop)
+	print(winsDict,stop)
 
-	return(wins)
+	# return(wins)
 
 
 ##stop = [17,20,17,17,17]
@@ -141,10 +178,46 @@ def play():
 ##check_window(window,adjs)
 ##print(wins)
 
-x = play()
-print(x)
-x.to_csv('results.csv')
+##print(winsDict)
 
 
+#run this to get it work 
+play()
+# print(x)
+# x.to_csv('results.csv')
 
 
+# print(winsDict)
+
+# winsDict['coins'][3] += 1
+# print(winsDict)
+
+# import csv
+# fieldnames = np.arange(0,9,1)
+# with open('MyResults.csv', 'wb') as f:
+# 	w= csv.DictWriter(f, fields)
+# 	w.writeheader()
+
+# 	for k,d in dw.items():
+# 		w.writerow
+
+def nested_dict_to_df(dic):
+	df = pd.DataFrame(np.zeros(shape = (20,20)))
+	for key,value in dic.items():
+		for k,v in value.items():
+			k = int(k)
+			if key == 'coins':
+				key = int(9)
+			key = int(key)
+			v = int(v)
+			# if key == 'coins':
+			# 	df.iloc[9,k] = v
+			# else:
+			# 	print(key,k,v)
+			df.iloc[key,k] = v
+			# print(key,k,v)
+	return(df)
+
+##print(x)
+df = nested_dict_to_df(winsDict)
+df.to_csv('myresultsnew.csv')
