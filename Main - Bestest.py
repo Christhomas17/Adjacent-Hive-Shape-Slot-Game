@@ -43,14 +43,14 @@ adjs = {(0,0):[(1,0),(1,1),(0,1)],(0,1):[(0,0),(1,1),(1,2),(0,2)],(0,2):[(0,1),(
 (4,1):[(4,2),(3,2),(3,1),(4,0)],
 (4,2):[(3,3),(3,2),(4,1)]}
 
-def create_winds_dict():
+def create_wins_dict():
 	
 	charizard = {symbol:{i:0 for i in range(20)} for symbol in range(10)}
 	charizard['coins'] = {i:0 for i in range(20)}
 	# print(charizard)
 	return(charizard)
 
-winsDict = create_winds_dict()
+winsDict = create_wins_dict()
 # print(winsDict)
 
 # symbol = 1
@@ -116,7 +116,7 @@ def check_window(window,adjs):
                 
 				winInWindow = True
 				# print('hi')
-				# wins[symCount][symbol] += 1
+				wins[symCount][symbol] += 1
 				# print(symbol,symCount)
 				winsDict[symbol][symCount] += 1
 

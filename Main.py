@@ -29,6 +29,16 @@ def get_stop(lengths):
 def get_window(reels,stop,windowSize,lengths):		
 	return([[reels[col][(stop[col] + row)%lengths[col]] for row in range(windowSize[col])] for col in range(5)])
 
+def create_wins_dict():
+	
+	charizard = {symbol:{i:0 for i in range(20)} for symbol in range(10)}
+	charizard['coins'] = {i:0 for i in range(20)}
+	# print(charizard)
+	return(charizard)
+
+winsDict = create_wins_dict()
+
+
 allSpots = [(0,0),(0,1),(0,2),
             (1,0),(1,1),(1,2),(1,3),
             (2,0),(2,1),(2,2),
@@ -122,14 +132,41 @@ def get_counts(window,allSpots):
 				pass
 
 		count = len(matched)
-
+		hasWin = False
 		if count >= 4:
 			# pass
 			# print(symbol,len(matched),window)
 			wins[count][symbol] += 1
+			hasWin = True
 		# print(matched,symbol)
 
+	
 
+		nineInWindow = False
+
+		global winsDict		
+		coins = 0
+		if not hasWin:
+			
+			#let's check for a 9
+			for col in range(5):
+				for row in range(windowSize[col]):
+					if window[col][row] == 9:
+						nineInWindow = True			
+					if window[col][row] == 6:
+						coins+=1
+		else:
+			winsDict['coins'][0] += 1
+
+
+		if nineInWindow:
+
+			winsDict['coins'][0] += 1
+		else:
+			winsDict['coins'][coins] += 1
+
+
+coinWins = 0
 wins = pd.DataFrame(np.zeros(shape = (12,20)))
 
 # window = [[0,0,1],
@@ -156,7 +193,7 @@ def play(reel,reelLengths):
 		# if stop == [4,4,4,4,4]:
 			# print('fouuurrr')
 		if count %1000000 == 0:
-			print(count, wins, str(time.time() - start ) + 'seconds have elapsed')
+			print(count, wins, winsDict['coins'],str(time.time() - start ) + 'seconds have elapsed')
 		# stop = [4]*5
 		window = get_window(reel,stop,windowSize,reelLengths)
 		get_counts(window,allSpots)
@@ -173,8 +210,29 @@ reel1,reel1Lengths = clean_reels(file)
 # get_counts(window,allSpots)
 # print(wins)
 
+#print(winsDict)
+
+
+def create_wins_dict():
+	
+	charizard = {symbol:{i:0 for i in range(20)} for symbol in range(10)}
+	charizard['coins'] = {i:0 for i in range(20)}
+	# print(charizard)
+	return(charizard)
+
+winsDict = create_wins_dict()
+
+
 x = play(reel1,reel1Lengths)
+print(coinWins)
+x.iloc[10,10] = coinWins
 x.to_csv('results.csv')
+
+print(winsDict)
+for i in range(20):
+	x.iloc[9,i] = winsDict['coin'][i]
+
+x.to_csv('resultswithcoins.csv')
 
 
 
