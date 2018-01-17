@@ -45,9 +45,6 @@ allSpots = [(0,0),(0,1),(0,2),
             (3,0),(3,1),(3,2),(3,3),
             (4,0),(4,1),(4,2)]
 
-
-
-
 adjs = {(0,0):[(1,0),(1,1),(0,1)],
 (0,1):[(0,0),(1,1),(1,2),(0,2)],
 (0,2):[(0,1),(1,2),(1,3)],
@@ -71,10 +68,6 @@ def remove_matched(spots,matched):
 		if item in spots:
 			spots.remove(item)
 	return(spots)
-
-# matched = [(2,2),(1,0)]
-
-# print(remove_matched(allSpots,matched))
 
 def check_adjacents(spot,matched,checked,symbol,window):
 	global adjs
@@ -107,23 +100,13 @@ def get_counts(window,allSpots):
 		# print(col,row)
 		symbol = window[col][row]
 		continu = True	
-		# print(matched[i], adjs[matched[i]])
-		while continu == True:
-			# print(matched, matched[i], 'matched',i)
-			# print(type(matched[i]), matched[i], adjs[matched[i]])
-			# matched,checked = check_adjacents(matched[i],matched,checked,symbol)
-			# print(matched,matched[i])
-
-			# if symbol == 1:
-				# print(matched)
-
+		
+		while continu == True:			
 			matched,checked = check_adjacents(matched[i],matched,checked,symbol,window)
 			i+=1
 			if i >= len(matched):
 				continu = False
 
-
-		
 		for Spot in matched:
 			try:
 				# print(Spot)
@@ -133,15 +116,9 @@ def get_counts(window,allSpots):
 
 		count = len(matched)
 		hasWin = False
-		if count >= 4:
-			# pass
-			# print(symbol,len(matched),window)
+		if count >= 4:			
 			wins[count][symbol] += 1
 			hasWin = True
-		# print(matched,symbol)
-
-	
-
 		nineInWindow = False
 
 		global winsDict		
@@ -169,32 +146,14 @@ def get_counts(window,allSpots):
 coinWins = 0
 wins = pd.DataFrame(np.zeros(shape = (12,20)))
 
-# window = [[0,0,1],
-# [0,0,1,2],
-# [1,1,2],
-# [0,0,0,2],
-# [0,0,2]]
-
-# get_counts(window,allSpots)
-# print(wins)
-
-# x = (2,0)
-# print(adjs[x])
-
-# for key,value in adjs.items():
-# 	print(key,value)
-
-
 def play(reel,reelLengths):
 	count = 1
 	start = time.time()
 
-	for stop in product(np.arange(0,40,1),repeat = 5):
-		# if stop == [4,4,4,4,4]:
-			# print('fouuurrr')
+	for stop in product(np.arange(0,40,1),repeat = 5):		
 		if count %1000000 == 0:
 			print(count, wins, winsDict['coins'],str(time.time() - start ) + 'seconds have elapsed')
-		# stop = [4]*5
+		
 		window = get_window(reel,stop,windowSize,reelLengths)
 		get_counts(window,allSpots)
 		count += 1
@@ -204,20 +163,11 @@ def play(reel,reelLengths):
 
 
 reel1,reel1Lengths = clean_reels(file)
-# print(reel1)
-# window = get_window(reel1,[4]*5,windowSize,reel1Lengths)
-# print(window)
-# get_counts(window,allSpots)
-# print(wins)
-
-#print(winsDict)
-
 
 def create_wins_dict():
 	
 	charizard = {symbol:{i:0 for i in range(20)} for symbol in range(10)}
-	charizard['coins'] = {i:0 for i in range(20)}
-	# print(charizard)
+	charizard['coins'] = {i:0 for i in range(20)}	
 	return(charizard)
 
 winsDict = create_wins_dict()
@@ -233,119 +183,3 @@ for i in range(20):
 	x.iloc[9,i] = winsDict['coin'][i]
 
 x.to_csv('resultswithcoins.csv')
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# def check_adjacent_spots(adjs,start,matched,checked,count,symbol,window):
-# 	# continu = False
-# 	continu = True
-# 	for curSpot in adjs[start]:
-# 		if curSpot not in checked and curSpot not in matched:
-# 			checked.append(curSpot)
-# 			col,row = curSpot
-# 			if window[col][row] == symbol:
-# 				count += 1
-# 				matched.append(curSpot)
-# 				continu = True
-# 	return(continu,matched,checked)
-
-
-# def check_window(window,adjs):
-# 	allMatched = []
-# 	for col in range(5):
-# 		for row in range(windowSize[col]):
-# 			# col = 0
-# 			# row = 0
-# 			symbol = window[col][row]
-
-# 			#let's keep track of the spots where adjacent symbols are
-# 			spot = (col,row)
-# 			# print(symbol, 'sym')
-# 			matched = [spot]
-# 			checked = [spot]
-# 			count = 1
-# 			# continu = True
-# 			i = 0
-
-# 			if spot not in allMatched:
-# 				continu = True
-# 			while  continu:
-# 					spot = matched[i]
-# 					# print(spot, 'spot')
-# 					continu,matched,checked = check_adjacent_spots(adjs,spot,matched,checked,count,symbol,window)
-# 					# print(matched, 'hi')
-# 					i+=1
-
-# 					if i >(len(matched)-1):
-# 						continu = False
-
-# 			symCount = len(matched)
-
-
-# 			global wins
-
-# 			if symCount >=4:
-# 				# print('hi')
-# 				wins[symCount][symbol] += 1
-
-# 			# global winsDict
-# 			# if symCount >= 4:
-# 			# 	try:
-# 			# 		winsDict[symbol][symCount] += 1
-# 			# 	except:
-# 			# 		winsDict[symbol][symCount] = 1
-			
-# 			# print(matched, 'matched', str(len(matched)) + 'count')
-# 			allMatched.extend(matched)
-
-
-# 		# print(window[col][row],spot)
-
-
-
-
-# wins = pd.DataFrame(np.zeros(shape = (12,20)))
-
-# def play():
-# 	count = 1
-	
-# 	for stop in product(np.arange(0,40,1),repeat = 5):
-
-# 		if count %100000 == 0:
-# 			print(count, wins)
-
-# 		window = get_window(reel1,stop,windowSize,reel1Lengths)
-# 		check_window(window,adjs)
-# 		count += 1
-# 	print(wins,stop)
-
-# 	return(wins)
-
-
-##stop = [17,20,17,17,17]
-##window = get_window(reel1,stop,windowSize,reel1Lengths)
-##print(window)
-##check_window(window,adjs)
-##print(wins)
-
-# x = play()
-# print(x)
-# x.to_csv('results.csv')
-
-
-
-
