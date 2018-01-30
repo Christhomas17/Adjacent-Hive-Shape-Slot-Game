@@ -213,7 +213,7 @@ x = play()
 # print(x)
 print(winsDict)
 print(wins)
-# x.to_csv('results.csv')
+x.to_csv('main-copy.csv')
 
 def nested_dict_to_df(dic):
 	df = pd.DataFrame(np.zeros(shape = (20,20)))

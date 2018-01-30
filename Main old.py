@@ -119,6 +119,7 @@ def get_counts(window,allSpots):
 		if count >= 4:			
 			wins[count][symbol] += 1
 			hasWin = True
+			
 		nineInWindow = False
 
 		global winsDict		
@@ -152,7 +153,8 @@ def play(reel,reelLengths):
 
 	for stop in product(np.arange(0,40,1),repeat = 5):		
 		if count %1000000 == 0:
-			print(count, wins, winsDict['coins'],str(time.time() - start ) + 'seconds have elapsed')
+        	print(count)
+			#print(count, wins, winsDict['coins'],str(time.time() - start ) + 'seconds have elapsed')
 		
 		window = get_window(reel,stop,windowSize,reelLengths)
 		get_counts(window,allSpots)
@@ -182,4 +184,4 @@ print(winsDict)
 for i in range(20):
 	x.iloc[9,i] = winsDict['coin'][i]
 
-x.to_csv('resultswithcoins.csv')
+x.to_csv('main.csv')
