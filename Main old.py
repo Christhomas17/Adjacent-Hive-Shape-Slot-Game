@@ -6,8 +6,6 @@ import numpy as np
 
 import time
 
-# print(time.time())
-
 file = 'ReelSet1.txt'
 windowSize = [3,4,3,4,3]
 
@@ -24,7 +22,6 @@ def clean_reels(file):
 
 def get_stop(lengths):
 	return([rd.randint(0,lengths[col] - 1) for col in range(len(lengths))])
-
 
 def get_window(reels,stop,windowSize,lengths):		
 	return([[reels[col][(stop[col] + row)%lengths[col]] for row in range(windowSize[col])] for col in range(5)])
@@ -100,6 +97,7 @@ def get_counts(window,allSpots):
 		# print(col,row)
 		symbol = window[col][row]
 		continu = True	
+<<<<<<< HEAD:Main old.py
 		
 		while continu == True:			
 			matched,checked = check_adjacents(matched[i],matched,checked,symbol,window)
@@ -107,6 +105,14 @@ def get_counts(window,allSpots):
 			if i >= len(matched):
 				continu = False
 
+=======
+		# print(matched[i], adjs[matched[i]])
+		while continu == True:
+			matched,checked = check_adjacents(matched[i],matched,checked,symbol,window)
+			i+=1
+			if i >= len(matched):
+				continu = False		
+>>>>>>> a8ec3a2006a867e51010c2359d73147bd54476f5:Main.py
 		for Spot in matched:
 			try:
 				# print(Spot)
@@ -184,4 +190,8 @@ print(winsDict)
 for i in range(20):
 	x.iloc[9,i] = winsDict['coin'][i]
 
+<<<<<<< HEAD:Main old.py
 x.to_csv('main.csv')
+=======
+x.to_csv('resultswithcoins.csv')
+>>>>>>> a8ec3a2006a867e51010c2359d73147bd54476f5:Main.py
