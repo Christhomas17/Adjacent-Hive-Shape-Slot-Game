@@ -360,7 +360,8 @@ for reelSet in range(numReelSets):
 
 			x.append(rowInfo)
 			y.append(totWin/its)
-
+	print(reelSet)
+	print(y)
 	df['Set ' + str(reelSet)] = x
 	winPercents['Set ' + str(reelSet)] = y
 	# print(df)
